@@ -91,7 +91,7 @@ def get_multiproject_usage_df(projects,
     COMPUTE_ACCOUNT_ATTRIBUTE_NAME = import_from_settings('CF_PLUGIN_DEMO_COMPUTE_ACCOUNT_ATTRIBUTE_NAME',
                                                           'slurm_account_name')
     # get the file path for the DF from settings
-    AGGREGATE_ACCOUNT_DF_PATH = import_from_settings('CF_PLUGIN_DEMO_COMPUTE_ACCOUNT_ATTRIBUTE_NAME')
+    AGGREGATE_ACCOUNT_DF_PATH = import_from_settings('CF_PLUGIN_DEMO_AGGREGATE_ACCOUNT_DF_PATH')
     
     # can't do anything without a dataframe path
     if not AGGREGATE_ACCOUNT_DF_PATH:
