@@ -1,0 +1,23 @@
+[project]
+name = "cf-plugin-demo"
+version = "0.0.1"
+description = "View usage metrics in ColdFront"
+readme = "README.md"
+authors = [
+    { name = "John LaGrone", email = "jlagrone@smu.edu" }
+]
+license = "MIT"
+license-files = ["LICENSES"]
+keywords = ["high-performance-computing", "usage-metrics"]
+classifiers = [
+    "Framework :: Django",
+    "Environment :: Plugins",
+    'Topic :: Scientific/Engineering',
+    'Topic :: System :: Systems Administration',
+]
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=3.0.4",
+    "plotly>=6.8.0",
+    "pyarrow>=24.0.0",
+]

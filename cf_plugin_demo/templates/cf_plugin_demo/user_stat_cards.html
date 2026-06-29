@@ -1,0 +1,267 @@
+{% extends "common/base.html" %}
+{% load common_tags %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block title %}
+User Usage Statistics
+{% endblock %}
+
+{% block content %}
+
+<div class="card border-light">
+  <div class="card-header">
+    <h2 class="d-inline"><i class="far fa-address-card" aria-hidden="true"></i> User Usage Statistics</h2> 
+    <div style="padding-top: 1.25em;" >
+      <p>Get usage statistics for specific users that can be filtered</p>
+      <ul>
+        <li>Project owners and managers can see all users on their projects. 
+          Other users can only see their own usage.</li>
+        <li>The "Users" field will be updated to show only valid users based on other selections.</li>
+        <li>Leaving fields blank is the same as selecting all available values.</li>
+      </ul>
+    </div>
+  </div>
+{% if expand_accordion == "show" or stats_cards %}
+  <div class="mb-3" id="accordion">
+    <div class="card">
+      <div class="card-header">
+        <a id="expand_button" role="button" class="card-link " data-toggle="collapse" href="#collapseOne">
+          <i class="fas fa-filter" aria-hidden="true"></i> Filter
+          <i id="plus_minus" class="fas {{expand_accordion|get_icon}} float-right"></i>
+        </a>
+      </div>
+      <div id="collapseOne" class="collapse {{expand_accordion}}" data-parent="#accordion">
+        <div class="card-body">
+          <form id="filter_form" method="GET" action="{% url 'user-usage-stats' %}" autocomplete="off">
+            {{ usage_search_form|crispy }}
+            <input type="submit" id="form_search_button" class="btn btn-primary" value="Search">
+            <button id="form_reset_button" type="button" class="btn btn-secondary">Reset</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <hr>
+{% endif %}
+
+<div id="loading_container" style="display:none; padding: 20px;">
+
+  <div class="text-center">
+    <button type="button" class="btn btn-primary"><i class="fas fa-sync fa-spin fa-fw" aria-hidden="true"></i> Getting Data <span
+        class="sr-only">...</span></button>
+  </div>
+</div>
+
+{% if stats_cards_count > 0 %}
+  <strong>Number of Users Statistics: {{stats_cards_count}}</strong>
+
+    <div class="flex-container">
+        {% for stat in stats_cards %}
+        <div class="flex-child">
+          <div class="card" style="border-color: #59C3C3; border-radius: 10px; border-width: 3px;">
+            <div class="card-header bg-primary" style="border-top-right-radius:7px; border-top-left-radius:7px;">
+              <div style="width:15%; height: 100%; float:left; vertical-align: middle; margin: 0;">
+              <img src="{% static 'common/images/logo.png' %}" style="width: 7em;">
+              </div>
+              <div style="float:right; width: 80%; padding-right: 1em;">
+              <h5 class="card-title" style="text-align: center;">{{ stat.name }}</h5>
+              <p style="text-align: center;">Usage from {{begin_date|date:"M d, Y"}} to {{end_date|date:"M d, Y"}}</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Number of Projects:</strong> {{ stat.num_projects }}</li>
+                <li class="list-group-item"><strong>Number of Compute Allocations:</strong> {{ stat.num_compute_allocations }}</li>
+                <li class="list-group-item"><strong>Number of Storage Allocations:</strong> {{ stat.num_storage_allocations }}</li>
+                <li class="list-group-item" id="cpu_data{{ forloop.counter0 }}"><strong>Total CPU Hours:</strong> {{ stat.cpu_hours }}
+                  {% if stat.cpu_plot %}
+                  <a id="show_cpu_plot_button{{ forloop.counter0 }}" role="button" class="card-link" data-toggle="collapse" href="#collapseCpus{{ forloop.counter0 }}">
+                    <i id="cpu_plus_minus{{ forloop.counter0 }}" class="fas {{show_cpu_plot|get_icon}} float-right">Show Plot</i>
+                  </a>
+                  <div id="collapseCpus{{ forloop.counter0 }}" class="collapse" data-parent="#cpu_data{{ forloop.counter0 }}" style="width:100%; margin:0; padding: 0;">
+                    {{ stat.cpu_plot|safe }}
+                  </div>
+                  {% endif %}
+                </li>
+                <li class="list-group-item" id="gpu_data{{ forloop.counter0 }}"><strong>Total GPU Hours</strong> {{ stat.gpu_hours }}
+                  {% if stat.gpu_plot %}
+                  <a id="show_gpu_plot_button{{ forloop.counter0 }}" role="button" class="card-link" data-toggle="collapse" href="#collapseGpus{{ forloop.counter0 }}">
+                    <i id="gpu_plus_minus{{ forloop.counter0 }}" class="fas {{show_gpu_plot|get_icon}} float-right">Show Plot</i>
+                  </a>
+                  <div id="collapseGpus{{ forloop.counter0 }}" class="collapse" data-parent="#gpu_data{{ forloop.counter0 }}" style="width:100%; margin:0; padding: 0;">
+                    {{ stat.gpu_plot|safe }}
+                  </div>
+                  {% endif %}
+                </li>
+                <li class="list-group-item" id="mem_data{{ forloop.counter0 }}"><strong>Memory Hours</strong> {{ stat.mem_hours }}
+                  {% if stat.mem_plot %}
+                  <a id="show_mem_plot_button{{ forloop.counter0 }}" role="button" class="card-link" data-toggle="collapse" href="#collapseMem{{ forloop.counter0 }}">
+                    <i id="mem_plus_minus{{ forloop.counter0 }}" class="fas {{show_mem_plot|get_icon}} float-right">Show Plot</i>
+                  </a>
+                  <div id="collapseMem{{ forloop.counter0 }}" class="collapse" data-parent="#mem_data{{ forloop.counter0 }}" style="width:100%; margin:0; padding: 0;">
+                    {{ stat.mem_plot|safe }}
+                  </div>
+                  {% endif %}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+{% elif stats_cards_count == 0 %}
+  <div class="alert alert-secondary" id="search_warning">
+    No search results!
+  </div>
+{% else %}
+  <div class="alert alert-secondary" id="search_warning">
+    No results to display. Try modifying your search.
+  </div>
+{% endif %}
+
+
+<script>
+
+  allowChangeToRun = false;
+ 
+  $("#navbar-main > ul > li.active").removeClass("active");
+  $("#navbar-user-usage-stats").addClass("active");
+  $("#navbar-metrics-menu").addClass("active");
+
+  $(document).on('click', '#form_reset_button', function () {
+    resetForm($('#filter_form'));
+  });
+
+  $(document).on('click', '#form_search_button', function () {
+    let loading_container = document.getElementById('loading_container')
+    loading_container.style.display = 'block';
+    let search_warning = document.getElementById('search_warning')
+    search_warning.style.display = 'none';
+    let submitted_el = document.getElementsByTagName("submitted");
+    submitted_el.value = "True"
+    $('#collapseOne').collapse();
+    icon = $("#plus_minus");
+    icon.toggleClass("fa-plus fa-minus");
+  });
+
+  $(document).ready(function() {
+    $('#id_field_of_science').select2();
+    $('#id_pis').select2();
+    $('#id_users').select2();
+    $('#id_projects').select2();
+    $('#id_status').select2();
+    $(".datepicker").flatpickr();
+    allowChangeToRun = true;
+
+  });
+
+  function resetForm($form) {
+    $form.find('input:text, input:password, input:file, select, textarea').val('');
+    $form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+  };
+
+  $("#expand_button").click(function () {
+    $('#collapseOne').collapse();
+    icon = $("#plus_minus");
+    icon.toggleClass("fa-plus fa-minus");
+  });
+
+  {% for stat in stats_cards %}
+  $("#show_job_plot_button{{ forloop.counter0 }}").click(function () {
+    $('#collapseJobs{{ forloop.counter0 }}').collapse();
+    icon = $("#job_plus_minus{{ forloop.counter0 }}");
+    icon.toggleClass("fa-plus fa-minus");
+    let plot_container = document.getElementById('collapseJobs{{ forloop.counter0 }}').getElementsByClassName('plot-container')[0];
+    if (typeof plot_container != "undefined") {
+      let element = plot_container.parentNode;
+      Plotly.Plots.resize(element);
+    }
+  });
+  $("#show_cpu_plot_button{{ forloop.counter0 }}").click(function () {
+    $('#collapseCpus{{ forloop.counter0 }}').collapse();
+    icon = $("#cpu_plus_minus{{ forloop.counter0 }}");
+    icon.toggleClass("fa-plus fa-minus");
+    let plot_container = document.getElementById('collapseCpus{{ forloop.counter0 }}').getElementsByClassName('plot-container')[0];
+    if (typeof plot_container != "undefined") {
+      let element = plot_container.parentNode;
+      Plotly.Plots.resize(element);
+    }
+  });
+  $("#show_gpu_plot_button{{ forloop.counter0 }}").click(function () {
+    $('#collapseGpus{{ forloop.counter0 }}').collapse();
+    icon = $("#gpu_plus_minus{{ forloop.counter0 }}");
+    icon.toggleClass("fa-plus fa-minus");
+    let plot_container = document.getElementById("collapseGpus{{ forloop.counter0 }}").getElementsByClassName('plot-container')[0];
+    if (typeof plot_container != "undefined") {
+      let element = plot_container.parentNode;
+      Plotly.Plots.resize(element);
+    }
+  });
+  $("#show_mem_plot_button{{ forloop.counter0 }}").click(function () {
+    $('#collapseMem{{ forloop.counter0 }}').collapse();
+    icon = $("#mem_plus_minus{{ forloop.counter0 }}");
+    icon.toggleClass("fa-plus fa-minus");
+    let plot_container = document.getElementById("collapseMem{{ forloop.counter0 }}").getElementsByClassName('plot-container')[0];
+    if (typeof plot_container != "undefined") {
+      let element = plot_container.parentNode;
+      Plotly.Plots.resize(element);
+    }
+  });
+  {% endfor %}
+
+  const endpoint = '/usage/stats-cards/'
+  const delay_by_in_ms = 100
+  let scheduled_function = false
+
+  let ajax_call = function (endpoint, request_parameters) {
+    $.getJSON(endpoint, request_parameters)
+      .done(response => {
+        if (response["user_query"]) {
+          var $select = $('#id_users');
+          const json_query = JSON.parse(response.user_query)
+          const noptions = Object.keys(json_query).length;
+          $select.html('');
+          for ( var i = 0; i < noptions; i++) {
+            $select.append("<option value=\"" + json_query[i].pk + "\">" + json_query[i].fields.first_name + " " + json_query[i].fields.last_name + " (" + json_query[i].fields.username + ") </option>");
+          }
+        }
+      })
+    }
+
+  $(document.body).on("change.select2","#id_projects",function(){
+    if (allowChangeToRun) {
+      call_ajax_updater()
+    }
+  })
+  $(document.body).on("change.select2","#id_field_of_science",function(){
+    if (allowChangeToRun) {
+      call_ajax_updater()
+    }
+  })
+  $(document.body).on("change.select2","#id_pis",function(){
+    if (allowChangeToRun) {
+      call_ajax_updater()
+    }
+  })
+
+  function call_ajax_updater() {
+    const request_parameters = {
+      "selected_projects": $("#id_projects").val(),
+      "selected_fos": $("#id_field_of_science").val(),
+      "selected_pis": $("#id_pis").val(),
+      "dataType": 'json'
+    }
+
+    // if scheduled_function is NOT false, cancel the execution of the function
+    if (scheduled_function) {
+      clearTimeout(scheduled_function)
+    }
+
+    // setTimeout returns the ID of the function to be executed
+    scheduled_function = setTimeout(ajax_call, delay_by_in_ms, endpoint, request_parameters)
+  }
+</script>
+{% endblock %}
