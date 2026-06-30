@@ -7,7 +7,7 @@ authors = [
     { name = "John LaGrone", email = "jlagrone@smu.edu" }
 ]
 license = "MIT"
-license-files = ["LICENSES"]
+license-files = ["LICENSE"]
 keywords = ["high-performance-computing", "usage-metrics"]
 classifiers = [
     "Framework :: Django",

@@ -40,7 +40,7 @@ wheels = [
 [[package]]
 name = "cf-plugin-demo"
 version = "0.0.1"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "coldfront" },
     { name = "pandas" },
