@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from coldfront.core.field_of_science.models import FieldOfScience
-from coldfront.core.department.models import Department
 from coldfront.core.project.models import Project
 
 from cf_plugin_demo.utils import filter_users

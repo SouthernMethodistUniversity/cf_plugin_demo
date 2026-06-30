@@ -36,7 +36,7 @@ def filter_users(user, projects, pis=[], fos=[]):
     else:
         valid_fos = projects.values_list('field_of_science', flat=True)
     project_users = ProjectUser.objects.prefetch_related(
-        'project', 'project__pi', 'project__departments', 'project__field_of_science__in',).filter(project__in=projects,
+        'project', 'project__pi', 'project__field_of_science__in',).filter(project__in=projects,
                                                                                                    project__pi__in=valid_pis,
                                                                                                    project__field_of_science__in=valid_fos)
     
