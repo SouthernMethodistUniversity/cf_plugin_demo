@@ -85,11 +85,6 @@ class UsageSearchForm(forms.Form):
         self.fields["users"].widget.attrs = {"style": "width:100%;"}
         self.fields["field_of_science"].widget.attrs = {"style": "width:100%;"}
         self.fields["submitted"].widget = forms.HiddenInput()
-        
-        self.fields["projects"].widget["class"] = "fos-select2"
-        self.fields["pis"].widget["class"] = "fos-select2"
-        self.fields["users"].widget["class"] = "fos-select2"
-        self.fields["field_of_science"].widget["class"] = "fos-select2"
 
 
     # Enforce a 20 user restriction. This is arbitrary, but doing too big
