@@ -30,6 +30,16 @@ INSTALLED_APPS += [
 ]
 ```
 
+In `coldfront/config/core.py` add:
+
+```
+# -----------------------------------------------------------------------------
+# Demo Plugin Functionality
+# -----------------------------------------------------------------------------
+CF_PLUGIN_DEMO_ENABLED = ENV.bool("CF_PLUGIN_DEMO_ENABLED", default=True)
+SETTINGS_EXPORT += ["CF_PLUGIN_DEMO_ENABLED"]
+```
+
 In `coldfront/config/settings.py` add settings for the plugin, e.g.
 
 ```
@@ -44,4 +54,13 @@ Add the URLs to `coldfront/config/urls.py`:
 ```
 if "cf_plugin_demo" in settings.INSTALLED_APPS:
     _patterns.append(path("reports/", include("cf_plugin_demo.urls")))
+```
+
+Finally, add links to the navigation bar (at this point the page is available at
+`COLDFRONT_URL/reports/stat-cards` but is not linked.) In `coldfront/templates/common/authorized_navbar.html` add
+
+```
+        {% if settings.CF_PLUGIN_DEMO_ENABLED %}
+          {% include 'cf_plugin_demo/navbar.html' %}
+        {% endif %}
 ```
