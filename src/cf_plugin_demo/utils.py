@@ -4,7 +4,6 @@ import logging
 import pandas as pd
 import plotly.graph_objects as go
 
-
 from django.db.models.query import QuerySet
 from django.db.models import Q
 from django.contrib.auth import get_user_model

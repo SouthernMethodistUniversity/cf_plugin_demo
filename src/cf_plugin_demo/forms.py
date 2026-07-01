@@ -1,5 +1,4 @@
 import datetime
-import logging
 
 from django import forms
 from django.shortcuts import get_object_or_404

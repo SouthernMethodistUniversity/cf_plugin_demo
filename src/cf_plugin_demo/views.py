@@ -1,14 +1,8 @@
-import datetime
 import logging
-import json
-import math
-
 import pandas as pd
 
 from plotly.subplots import make_subplots
-import plotly.graph_objects as go
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -17,7 +11,6 @@ from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.core import serializers
 from django.shortcuts import get_object_or_404, redirect, render
-
 
 from coldfront.core.allocation.models import Allocation
 from coldfront.core.project.models import Project
@@ -107,7 +100,6 @@ class UserStatsCardView(LoginRequiredMixin, TemplateView):
                                                    data['start_date'],
                                                    data['end_date'],
                                                    users_to_include=user_list)
-                    print(df)
                 except Exception as e:
                     logger.error(
                         "failed to get usage df with error: {}".format(e))
@@ -188,8 +180,6 @@ class UserStatsCardView(LoginRequiredMixin, TemplateView):
                 context['end_date'] = data['end_date']
                 context['expand_accordion'] = 'hide'
                 
-                print(json.dumps(usage_dict, indent=2))
-
             else:
                 project_list = None
                 for error in usage_search_form.errors:
