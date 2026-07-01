@@ -63,3 +63,18 @@ Finally, add links to the navigation bar (at this point the page is available at
           {% include 'cf_plugin_demo/navbar.html' %}
         {% endif %}
 ```
+
+## Running
+
+In order to actually use the plugin, you will need data. In a real world example, this should
+probably come from and external source like XDMoD or a Prometheus.
+For testing purposes, there is a sample data set available in `src/cf_plugin_demo/data/cf_demo_data.feather`.
+
+For the plugin to see the data, you can set the environment variable:
+
+```
+CF_PLUGIN_DEMO_AGGREGATE_ACCOUNT_DF_PATH="<path to this repository>/src/cf_plugin_demo/data/cf_demo_data.feather"
+```
+
+Instead of an environment variable this can also be set in local settings, which are typically in
+`/etc/coldfront/local_settings.py` or the ColdFront project root folder.
