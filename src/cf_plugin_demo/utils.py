@@ -70,7 +70,7 @@ def make_plotly_line(df, key, title, yaxis, xaxis="Date", includejs=False, full_
                                         mode='lines+markers',
                                         name=str(user)))
         tmp_plot.update_layout(xaxis_title=xaxis, yaxis_title=yaxis)
-        tmp_plot = tmp_plot.to_html(include_plotlyjs=includejs, full_html=full_html)
+        tmp_plot = tmp_plot.to_html(include_plotlyjs=includejs, full_html=full_html, config={'responsive': True})
         
         return tmp_plot
     

@@ -43,8 +43,7 @@ SETTINGS_EXPORT += ["CF_PLUGIN_DEMO_ENABLED"]
 In `coldfront/config/settings.py` add settings for the plugin, e.g.
 
 ```
-CF_PLUGIN_DEMO_COMPUTE_ACCOUNT_ATTRIBUTE_NAME = ENV.str('CF_PLUGIN_DEMO_COMPUTE_ACCOUNT_ATTRIBUTE_NAME',
-                                                          default='slurm_account_name')
+CF_PLUGIN_DEMO_COMPUTE_ACCOUNT_ATTRIBUTE_NAME = ENV.str('CF_PLUGIN_DEMO_COMPUTE_ACCOUNT_ATTRIBUTE_NAME', default='slurm_account_name')
 # get the file path for the DF from settings
 CF_PLUGIN_DEMO_AGGREGATE_ACCOUNT_DF_PATH = ENV.str('CF_PLUGIN_DEMO_AGGREGATE_ACCOUNT_DF_PATH', default='')
 ```

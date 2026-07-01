@@ -107,9 +107,11 @@ class UserStatsCardView(LoginRequiredMixin, TemplateView):
                                                    data['start_date'],
                                                    data['end_date'],
                                                    users_to_include=user_list)
+                    print(df)
                 except Exception as e:
                     logger.error(
                         "failed to get usage df with error: {}".format(e))
+                    df = pd.DataFrame()
 
                 # create dict of usage
                 usage_dict = []
@@ -171,7 +173,7 @@ class UserStatsCardView(LoginRequiredMixin, TemplateView):
                         # try to generate the requested plots
                         for key, values in plot_types.items():
                             
-                            tmp_entry[values['count_name']] = user_df[key].sum()
+                            tmp_entry[values['count_name']] = round(user_df[key].sum())
                             tmp_entry[values['plot_name']] = make_plotly_line(user_df, key, values['title'], values['yaxis'], includejs=include_plotlyjs)
                             
                             # only need to include js once
@@ -185,6 +187,8 @@ class UserStatsCardView(LoginRequiredMixin, TemplateView):
                 context['begin_date'] = data['start_date']
                 context['end_date'] = data['end_date']
                 context['expand_accordion'] = 'hide'
+                
+                print(json.dumps(usage_dict, indent=2))
 
             else:
                 project_list = None
